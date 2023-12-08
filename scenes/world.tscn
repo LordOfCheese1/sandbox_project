@@ -6,8 +6,5 @@
 [node name="world" type="Node2D"]
 
 [node name="player" parent="." instance=ExtResource("2_0ux05")]
-position = Vector2(186, 15)
-
-[node name="Camera2D" type="Camera2D" parent="player"]
 
 [node name="world_tiles" parent="." instance=ExtResource("1_opf06")]

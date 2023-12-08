@@ -1,12 +1,12 @@
 extends TileMap
 
 const SURFACE_HEIGHT = 36
-const CURVE_POINT_DISTANCE = 16
+const CURVE_POINT_DISTANCE = 24
 const CHUNK_SIZE = 16
 const MAX_ACTIVE_CHUNKS = 8 # This squared is the final amount of chunks
+const TILE_SIZE = 8
 
 var chunk_queue = []
-var world_seed = 1
 var active_chunks = [] # this uses the chunk origin, so top left, a chunk is 16*16 tiles or 64*64 pixels
 var deletion_queue = []
 
@@ -15,7 +15,7 @@ func _ready():
 	clear()
 
 
-func _physics_process(delta):
+func _process(_delta):
 	generate_based_on_playerpos()
 	
 	var temp_removed_chunk_amt = 0
@@ -23,7 +23,7 @@ func _physics_process(delta):
 	for i in len(active_chunks):
 		var chunk = active_chunks[i - temp_removed_chunk_amt]
 		# check if distance to player is higher than max active chunks
-		if abs(chunk.x - Globals.player_pos.x) + abs(chunk.y - Globals.player_pos.y) > CHUNK_SIZE * MAX_ACTIVE_CHUNKS * 4: 
+		if abs(chunk.x - Globals.player_pos.x) + abs(chunk.y - Globals.player_pos.y) > CHUNK_SIZE * MAX_ACTIVE_CHUNKS * TILE_SIZE: 
 			# queue chunk for deletion and remove from active chunks, temp_removed_chunk_amt exists to not reference nonexistent indexes
 			queue_chunk_deletion(active_chunks[i- temp_removed_chunk_amt])
 			active_chunks.remove_at(i - temp_removed_chunk_amt)
@@ -51,15 +51,15 @@ func queue_chunk_deletion(pos : Vector2):
 func generate_chunk_by_pos(pos : Vector2):
 	for x in range(CHUNK_SIZE):
 		for y in range(CHUNK_SIZE):
-			var real_pos = Vector2(pos.x / 4 + x, pos.y / 4 + y)
+			var real_pos = Vector2(pos.x / TILE_SIZE + x, pos.y / TILE_SIZE + y)
 			if real_pos.y > get_curve_surface(real_pos):
-				set_cell(0, Vector2(real_pos.x, real_pos.y), 0, Vector2(0, 0), 0)
+				set_cell(0, Vector2(real_pos.x, real_pos.y), 0, Vector2(0, 1), 0)
 
 
 func clear_chunk_by_pos(pos : Vector2):
 	for x in range(CHUNK_SIZE):
 		for y in range(CHUNK_SIZE):
-			var real_pos = Vector2(pos.x / 4 + x, pos.y / 4 + y)
+			var real_pos = Vector2(pos.x / TILE_SIZE + x, pos.y / TILE_SIZE + y)
 			set_cell(0, real_pos, -1, Vector2(-1, -1), -1)
 
 
@@ -80,8 +80,7 @@ func get_curve_surface(pos : Vector2):
 
 
 func generate_y_height_for_x(x : float):
-	seed(clamp(x, -(2**16), 2**16) + world_seed)
-	return randi_range(SURFACE_HEIGHT - 10, SURFACE_HEIGHT + 10)
+	return Sandmath.biased_randi_range(SURFACE_HEIGHT - 20, SURFACE_HEIGHT + 20, 0, 4, x + Globals.world_seed)
 
 
 func cerp(a, b, transition_value : float): # transition value ranges from 0 to 1
@@ -90,11 +89,11 @@ func cerp(a, b, transition_value : float): # transition value ranges from 0 to 1
 
 
 func generate_based_on_playerpos():
-	var current_centre = Vector2(snapped(Globals.player_pos.x, CHUNK_SIZE * 4), snapped(Globals.player_pos.y, CHUNK_SIZE * 4)) # snapped to 64 because 16(chunk size) * 4(tile size)
+	var current_centre = Vector2(snapped(Globals.player_pos.x, CHUNK_SIZE * TILE_SIZE), snapped(Globals.player_pos.y, CHUNK_SIZE * TILE_SIZE)) # snapped to 64 because 16(chunk size) * 4(tile size)
 	# go through all possible chunk positions around the player pos
 	for x in MAX_ACTIVE_CHUNKS:
 		for y in MAX_ACTIVE_CHUNKS:
-			var chunk = Vector2(current_centre.x + (x - snapped(MAX_ACTIVE_CHUNKS / 2, 1)) * CHUNK_SIZE * 4, current_centre.y + (y - snapped(MAX_ACTIVE_CHUNKS / 2, 1)) * CHUNK_SIZE * 4)
+			var chunk = Vector2(current_centre.x + (x - snapped(MAX_ACTIVE_CHUNKS / 2, 1)) * CHUNK_SIZE * TILE_SIZE, current_centre.y + (y - snapped(MAX_ACTIVE_CHUNKS / 2, 1)) * CHUNK_SIZE * TILE_SIZE)
 			# if chunk is not already present, queue creation of that chunk
 			if active_chunks.has(chunk) or chunk_queue.has(chunk):
 				pass

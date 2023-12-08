@@ -4,4 +4,3 @@ res://prefabs/world/world_tiles.tscn
 res://prefabs/autoloads/globals.tscn
 res://prefabs/characters/player.tscn
 res://prefabs/autoloads/sandmath.tscn
-res://scripts/characters/player.gd
