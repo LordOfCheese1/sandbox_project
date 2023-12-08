@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://b1ysr7u8fxly8"]
+
+[ext_resource type="PackedScene" uid="uid://da85ujpx86v27" path="res://prefabs/world/world_tiles.tscn" id="1_opf06"]
+[ext_resource type="PackedScene" uid="uid://cxh2nb1rf06fa" path="res://prefabs/characters/player.tscn" id="2_0ux05"]
+
+[node name="world" type="Node2D"]
+
+[node name="player" parent="." instance=ExtResource("2_0ux05")]
+position = Vector2(186, 15)
+
+[node name="Camera2D" type="Camera2D" parent="player"]
+
+[node name="world_tiles" parent="." instance=ExtResource("1_opf06")]
