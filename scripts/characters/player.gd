@@ -1,10 +1,10 @@
 extends CharacterBody2D
 
-const MOVE_SPEED : float = 80
+const MOVE_SPEED : float = 90
 const JUMP_HEIGHT : float = -200
 const GRAVITY : float = 500
 
-var accel = 0.2
+var accel = 0.25
 var input_allowed = true
 var jump_buffer_time = 0.0
 var has_released_jump_button = true
@@ -76,3 +76,10 @@ func _physics_process(delta):
 	if Input.is_action_pressed("test"):
 		position = lerp(position, get_global_mouse_position(), 0.1)
 		velocity = Vector2(0, 0)
+	
+	
+	if Input.is_action_pressed("excavate"):
+		WorldMapTools.edit_tile(get_global_mouse_position() - Vector2(4, 4))
+	
+	if Input.is_action_pressed("place"):
+		WorldMapTools.edit_tile(get_global_mouse_position() - Vector2(4, 4), 0)

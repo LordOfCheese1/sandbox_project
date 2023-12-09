@@ -1,6 +1,11 @@
 res://scenes/world.tscn
-res://scripts/world/world_tiles.gd
 res://prefabs/world/world_tiles.tscn
 res://prefabs/autoloads/globals.tscn
 res://prefabs/characters/player.tscn
 res://prefabs/autoloads/sandmath.tscn
+res://prefabs/autoloads/save_values.tscn
+res://scripts/autoloads/save_values.gd
+res://scripts/world/world_tiles.gd
+res://prefabs/autoloads/world_map_tools.tscn
+res://scripts/autoloads/world_map_tools.gd
+res://scripts/characters/player.gd
