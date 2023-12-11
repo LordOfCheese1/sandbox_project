@@ -79,7 +79,7 @@ func _physics_process(delta):
 	
 	
 	if Input.is_action_pressed("excavate"):
-		WorldMapTools.edit_tile(get_global_mouse_position() - Vector2(4, 4))
+		WorldMapTools.edit_tile(get_global_mouse_position() - Vector2(4, 4), -1)
 	
 	if Input.is_action_pressed("place"):
 		WorldMapTools.edit_tile(get_global_mouse_position() - Vector2(4, 4), 0)

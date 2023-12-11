@@ -1,7 +1,7 @@
 extends TileMap
 
 var chunk_queue = []
-var active_chunks = [] # this uses the chunk origin, so top left, a chunk is 16*16 tiles or 64*64 pixels
+var active_chunks = [] # this uses the chunk origin, so top left
 var deletion_queue = []
 
 
@@ -17,7 +17,7 @@ func _process(_delta):
 	for i in len(active_chunks):
 		var chunk = active_chunks[i - temp_removed_chunk_amt]
 		# check if distance to player is higher than max active chunks
-		if abs(chunk.x - Globals.player_pos.x) + abs(chunk.y - Globals.player_pos.y) > WorldMapTools.CHUNK_SIZE * WorldMapTools.MAX_ACTIVE_CHUNKS * WorldMapTools.TILE_SIZE: 
+		if abs(chunk.x - Globals.player_pos.x) > WorldMapTools.CHUNK_SIZE * WorldMapTools.MAX_ACTIVE_CHUNKS * WorldMapTools.TILE_SIZE or abs(chunk.y - Globals.player_pos.y) > WorldMapTools.CHUNK_SIZE * WorldMapTools.MAX_ACTIVE_CHUNKS * WorldMapTools.TILE_SIZE: 
 			# queue chunk for deletion and remove from active chunks, temp_removed_chunk_amt exists to not reference nonexistent indexes
 			queue_chunk_deletion(active_chunks[i- temp_removed_chunk_amt])
 			active_chunks.remove_at(i - temp_removed_chunk_amt)
@@ -33,6 +33,7 @@ func _process(_delta):
 		clear_chunk_by_pos(deletion_queue[0])
 		deletion_queue.remove_at(0)
 	
+	# place any tiles that the player has just now edited
 	for tile in WorldMapTools.recently_updated:
 		set_cell(0, tile[0], 0, Vector2(tile[1], 0), 0)
 	WorldMapTools.recently_updated = []
@@ -47,19 +48,20 @@ func queue_chunk_deletion(pos : Vector2):
 
 
 func generate_chunk_by_pos(pos : Vector2):
+	# loop through all tiles on x and y
 	for x in range(WorldMapTools.CHUNK_SIZE):
 		for y in range(WorldMapTools.CHUNK_SIZE):
+			# get current tile pos on the tilemap coordinate system
 			var real_pos = Vector2(pos.x / WorldMapTools.TILE_SIZE + x, pos.y / WorldMapTools.TILE_SIZE + y)
 			if real_pos.y > get_curve_surface(real_pos):
 				set_cell(0, Vector2(real_pos.x, real_pos.y), 0, Vector2(2, 0), 0)
 			if abs(real_pos.y - get_curve_surface(real_pos)) < 1:
 				set_cell(0, Vector2(real_pos.x, real_pos.y), 0, Vector2(0, 0), 0)
-	# edits
-	# check if current chunk has any edits
-	if WorldMapTools.edited_chunks.has(Vector2(pos.x / WorldMapTools.TILE_SIZE, pos.y / WorldMapTools.TILE_SIZE)):
-		# loop through tiles
-		for tile_pos in WorldMapTools.edited_chunks[Vector2(pos.x / WorldMapTools.TILE_SIZE, pos.y / WorldMapTools.TILE_SIZE)]:
-			set_cell(0, tile_pos, 0, Vector2(WorldMapTools.edited_chunks[Vector2(pos.x / WorldMapTools.TILE_SIZE, pos.y / WorldMapTools.TILE_SIZE)][tile_pos][0], 0), 0)
+	
+	# check if current chunk has any edits, is in pixel coordinates
+	if WorldMapTools.edited_chunks.has(pos):
+		for tile_pos in WorldMapTools.edited_chunks[pos]:
+			set_cell(0, tile_pos, 0, Vector2(WorldMapTools.edited_chunks[pos][tile_pos][0], 0), 0)
 
 
 func clear_chunk_by_pos(pos : Vector2):
@@ -95,17 +97,15 @@ func cerp(a, b, transition_value : float): # transition value ranges from 0 to 1
 
 
 func generate_based_on_playerpos():
-	# snapped to 64 because 16(chunk size) * 4(tile size), it ends up being in global coordinates
-	var current_centre = Vector2(snapped(Globals.player_pos.x, WorldMapTools.CHUNK_SIZE * WorldMapTools.TILE_SIZE), snapped(Globals.player_pos.y, WorldMapTools.CHUNK_SIZE * WorldMapTools.TILE_SIZE))
-	# go through all possible chunk positions around the player pos
+	# current centre, around which chunks are going to be generated (IN GLOBAL PIXEL COORDINATES)
+	var multiply_value = WorldMapTools.TILE_SIZE * WorldMapTools.CHUNK_SIZE
+	var current_centre = Vector2(snapped(Globals.player_pos.x, multiply_value), snapped(Globals.player_pos.y, multiply_value)) - Vector2(multiply_value, multiply_value) * 0.5
 	for x in WorldMapTools.MAX_ACTIVE_CHUNKS:
 		for y in WorldMapTools.MAX_ACTIVE_CHUNKS:
-			var chunk = Vector2(current_centre.x + (x - snapped(WorldMapTools.MAX_ACTIVE_CHUNKS / 2, 1)) * WorldMapTools.CHUNK_SIZE * WorldMapTools.TILE_SIZE, current_centre.y + (y - snapped(WorldMapTools.MAX_ACTIVE_CHUNKS / 2, 1)) * WorldMapTools.CHUNK_SIZE * WorldMapTools.TILE_SIZE)
-			# if chunk is not already present, queue creation of that chunk
-			if active_chunks.has(chunk) or chunk_queue.has(chunk):
-				pass
-			else:
-				# final chunk coordinate is global
+			# get the current chunk origin pos (IN GLOBAL PIXEL COORDINATES)
+			var chunk = current_centre + Vector2(x - snapped(WorldMapTools.MAX_ACTIVE_CHUNKS / 2, 1), y - snapped(WorldMapTools.MAX_ACTIVE_CHUNKS / 2, 1)) * multiply_value
+			# check if chunk already exists, if so, do nothing
+			if !active_chunks.has(chunk) && !chunk_queue.has(chunk):
 				queue_chunk_creation(chunk)
 
 
