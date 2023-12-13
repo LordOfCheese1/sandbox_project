@@ -21,3 +21,7 @@ func biased_randf_range(from : float, to : float, bias_towards : float, bias_int
 		if abs(new_result - bias_towards) < (current_closest_result - bias_towards):
 			current_closest_result = new_result
 	return current_closest_result
+
+
+func moechtegern_distance(a : Vector2, b : Vector2):
+	return abs(a.x - b.x) + abs(a.y - b.y)

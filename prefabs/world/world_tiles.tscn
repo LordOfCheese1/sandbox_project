@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://7lujw5l2eo5t" path="res://textures/world_tiles.png" id="1_4mylr"]
 [ext_resource type="Script" path="res://scripts/world/world_tiles.gd" id="2_xs2wk"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p1ksy"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_h3t6g"]
 texture = ExtResource("1_4mylr")
 texture_region_size = Vector2i(8, 8)
 0:0/0 = 0
@@ -14,14 +14,6 @@ texture_region_size = Vector2i(8, 8)
 1:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 1:0/0/physics_layer_0/angular_velocity = 0.0
 1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
-0:1/0 = 0
-0:1/0/physics_layer_0/linear_velocity = Vector2(0, 0)
-0:1/0/physics_layer_0/angular_velocity = 0.0
-0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
-1:1/0 = 0
-1:1/0/physics_layer_0/linear_velocity = Vector2(0, 0)
-1:1/0/physics_layer_0/angular_velocity = 0.0
-1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
 2:0/0 = 0
 2:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 2:0/0/physics_layer_0/angular_velocity = 0.0
@@ -31,13 +23,13 @@ texture_region_size = Vector2i(8, 8)
 3:0/0/physics_layer_0/angular_velocity = 0.0
 3:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
 
-[sub_resource type="TileSet" id="TileSet_agt46"]
+[sub_resource type="TileSet" id="TileSet_b52r1"]
 tile_size = Vector2i(8, 8)
 physics_layer_0/collision_layer = 1
-sources/0 = SubResource("TileSetAtlasSource_p1ksy")
+sources/0 = SubResource("TileSetAtlasSource_h3t6g")
 
 [node name="world_tiles" type="TileMap"]
-tile_set = SubResource("TileSet_agt46")
-cell_quadrant_size = 8
+tile_set = SubResource("TileSet_b52r1")
+rendering_quadrant_size = 8
 format = 2
 script = ExtResource("2_xs2wk")
