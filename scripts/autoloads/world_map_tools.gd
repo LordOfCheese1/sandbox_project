@@ -15,7 +15,7 @@ func edit_tile(pos : Vector2, new_tile = -1):
 	# global coords
 	var chunk_pos = Vector2(snapped(pos.x - multiply_value, TILE_SIZE * CHUNK_SIZE), snapped(pos.y - multiply_value, TILE_SIZE * CHUNK_SIZE))
 	# tile coords
-	var tile_pos = Vector2(snapped(pos.x, TILE_SIZE) / TILE_SIZE, snapped(pos.y, TILE_SIZE) / TILE_SIZE)
+	var tile_pos = Vector2(snapped(pos.x - TILE_SIZE / 2, TILE_SIZE) / TILE_SIZE, snapped(pos.y - TILE_SIZE / 2, TILE_SIZE) / TILE_SIZE)
 	
 	if !edited_chunks.has(chunk_pos):
 		edited_chunks[chunk_pos] = {tile_pos : [new_tile]}

@@ -8,3 +8,5 @@ res://prefabs/autoloads/sandmath.tscn
 res://prefabs/autoloads/save_values.tscn
 res://prefabs/autoloads/world_map_tools.tscn
 res://scripts/autoloads/sandmath.gd
+res://scripts/characters/player.gd
+res://scripts/autoloads/globals.gd
