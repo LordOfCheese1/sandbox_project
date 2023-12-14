@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ek62met0yokx"]
+
+[ext_resource type="Script" path="res://scripts/autoloads/noise_tools.gd" id="1_try8m"]
+
+[node name="noise_tools" type="Node2D"]
+script = ExtResource("1_try8m")

@@ -4,10 +4,11 @@ extends TileMap
 var creation_queue = []
 var active_chunks = [] # this uses the chunk origin, so top left
 var deletion_queue = []
+var biome_noise = []
 
 
 func _ready():
-	clear()
+	biome_noise = NoiseTools.generate_1d_noise(WorldMapTools.LENGTH_BIOME_NOISE, Globals.world_seed)
 
 
 func _process(delta):
@@ -62,7 +63,8 @@ func generate_chunk(pos : Vector2): # global coords
 		for y in WorldMapTools.CHUNK_SIZE:
 			var tile_pos = (pos / WorldMapTools.TILE_SIZE) + Vector2(x, y)
 			# do the checks and place tiles accordingly
-			do_checks(tile_pos)
+			var biome_idx = int(fmod(pos.x / WorldMapTools.TILE_SIZE * WorldMapTools.CHUNK_SIZE, WorldMapTools.LENGTH_BIOME_NOISE))
+			do_checks(tile_pos, biome_idx)
 	apply_edits_in_chunk(pos)
 
 
@@ -78,11 +80,14 @@ func delete_chunk(pos : Vector2): # global coords
 			set_cell(0, pos / WorldMapTools.TILE_SIZE + Vector2(x, y), 0, Vector2(-1, -1), 0)
 
 
-func do_checks(pos : Vector2): # tile coords
+func do_checks(pos : Vector2, biome_idx : int): # tile coords
 	var tile_to_place = -1
 	
 	if pos.y > curve_surface_check(pos):
-		tile_to_place = 0
+		if abs(pos.y - curve_surface_check(pos)) < 1.5:
+			tile_to_place = 0
+		else:
+			tile_to_place = 2
 	
 	set_cell(0, pos, 0, Vector2(tile_to_place, 0), 0)
 
@@ -103,8 +108,8 @@ func curve_surface_check(pos : Vector2):
 	return cerp(generate_y_height_for_x(start_x), generate_y_height_for_x(end_x), transition_value) 
 
 
-func generate_y_height_for_x(x : float, min = -20, max = 20, bias = 0, bias_intensity = 4):
-	return Sandmath.biased_randi_range(WorldMapTools.SURFACE_HEIGHT + min, WorldMapTools.SURFACE_HEIGHT - min, bias, bias_intensity, x + Globals.world_seed)
+func generate_y_height_for_x(x : float, min = -20, max = 20, bias = 0, bias_intensity = 5):
+	return SandMath.biased_randi_range(WorldMapTools.SURFACE_HEIGHT + min, WorldMapTools.SURFACE_HEIGHT - min, bias, bias_intensity, x + Globals.world_seed)
 
 
 func cerp(a, b, transition_value : float): # transition value ranges from 0 to 1

@@ -1,0 +1,3 @@
+[ ] caves using cellular automata(And the go into the surface too, get more common as you go down)
+[ ] several biomes made using noise
+[ ] get structures (something like villages) to work

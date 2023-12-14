@@ -73,13 +73,17 @@ func _physics_process(delta):
 			look_dir.x = Input.get_axis("left", "right")
 		look_dir.y = Input.get_axis("up", "down")
 	
-	if Input.is_action_pressed("test"):
-		position = lerp(position, get_global_mouse_position(), 0.1)
-		velocity = Vector2(0, 0)
+	
+		if Input.is_action_pressed("excavate"):
+			WorldMapTools.edit_tile(get_global_mouse_position())
+		if Input.is_action_pressed("place"):
+			WorldMapTools.edit_tile(get_global_mouse_position(), 0)
 	
 	
-	if Input.is_action_pressed("excavate"):
-		WorldMapTools.edit_tile(get_global_mouse_position())
+	if Input.is_action_just_pressed("toggle_dev_mode"):
+		Globals.dev_mode = !Globals.dev_mode
 	
-	if Input.is_action_pressed("place"):
-		WorldMapTools.edit_tile(get_global_mouse_position())
+	if Globals.dev_mode:
+		if Input.is_action_pressed("test"):
+			position = lerp(position, get_global_mouse_position(), 0.1)
+			velocity = Vector2(0, 0)
