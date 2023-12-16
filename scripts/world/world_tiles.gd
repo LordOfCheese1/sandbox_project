@@ -4,11 +4,10 @@ extends TileMap
 var creation_queue = []
 var active_chunks = [] # this uses the chunk origin, so top left
 var deletion_queue = []
-var biome_noise = []
 
 
 func _ready():
-	biome_noise = NoiseTools.generate_1d_noise(WorldMapTools.LENGTH_BIOME_NOISE, Globals.world_seed)
+	pass
 
 
 func _process(delta):
@@ -63,8 +62,7 @@ func generate_chunk(pos : Vector2): # global coords
 		for y in WorldMapTools.CHUNK_SIZE:
 			var tile_pos = (pos / WorldMapTools.TILE_SIZE) + Vector2(x, y)
 			# do the checks and place tiles accordingly
-			var biome_idx = int(fmod(pos.x / WorldMapTools.TILE_SIZE * WorldMapTools.CHUNK_SIZE, WorldMapTools.LENGTH_BIOME_NOISE))
-			do_checks(tile_pos, biome_idx)
+			do_checks(tile_pos)
 	apply_edits_in_chunk(pos)
 
 
@@ -80,19 +78,22 @@ func delete_chunk(pos : Vector2): # global coords
 			set_cell(0, pos / WorldMapTools.TILE_SIZE + Vector2(x, y), 0, Vector2(-1, -1), 0)
 
 
-func do_checks(pos : Vector2, biome_idx : int): # tile coords
+func do_checks(pos : Vector2): # tile coords
 	var tile_to_place = -1
 	
-	if pos.y > curve_surface_check(pos):
-		if abs(pos.y - curve_surface_check(pos)) < 1.5:
-			tile_to_place = 0
+	# min height, max height, bias towards, bias intensity, surface tile, underground tile
+	var config = [-20, 20, 0, 4, 2, 5]
+	
+	if pos.y > curve_surface_check(pos, config[0], config[1], config[2], config[3]):
+		if abs(pos.y - curve_surface_check(pos, config[0], config[1], config[2], config[3])) < 1.5:
+			tile_to_place = config[4]
 		else:
-			tile_to_place = 2
+			tile_to_place = config[5]
 	
 	set_cell(0, pos, 0, Vector2(tile_to_place, 0), 0)
 
 
-func curve_surface_check(pos : Vector2):
+func curve_surface_check(pos : Vector2, min_height = -20, max_height = 20, bias = 0, bias_intensity = 5):
 	# basically just subtracting the leftover from x so it's snapped to the point to its left
 	var start_x = pos.x - fmod(pos.x, WorldMapTools.CURVE_POINT_DISTANCE)
 	
@@ -105,7 +106,7 @@ func curve_surface_check(pos : Vector2):
 		transition_value = 1 - transition_value
 	
 	# get the cosine-interpolated y value based on start-height, end-height and the transition value
-	return cerp(generate_y_height_for_x(start_x), generate_y_height_for_x(end_x), transition_value) 
+	return cerp(generate_y_height_for_x(start_x, min_height, max_height, bias, bias_intensity), generate_y_height_for_x(end_x, min_height, max_height, bias, bias_intensity), transition_value)
 
 
 func generate_y_height_for_x(x : float, min = -20, max = 20, bias = 0, bias_intensity = 5):

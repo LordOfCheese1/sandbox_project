@@ -5,16 +5,6 @@ const CURVE_POINT_DISTANCE = 24
 const CHUNK_SIZE = 16
 const MAX_ACTIVE_CHUNKS = 8 # This squared is the final amount of chunks, make it a multiple of 2 pretty please
 const TILE_SIZE = 8
-const LENGTH_BIOME_NOISE = 1024
-const BIOMES = [
-	"ARCTIC",
-	"MOUNTAIN",
-	"TUNDRA",
-	"JUNGLE",
-	"FOREST",
-	"SAVANNA",
-	"DESERT"
-]
 
 var edited_chunks = {} # -> [chunk_pos][tile_pos][properties]
 var recently_updated = []
@@ -33,7 +23,3 @@ func edit_tile(pos : Vector2, new_tile = -1):
 		edited_chunks[chunk_pos][tile_pos] = [new_tile]
 	
 	recently_updated.append([tile_pos, new_tile])
-
-
-func get_biome_from_value(value : float):
-	return BIOMES[snapped(value * len(BIOMES), 1)]

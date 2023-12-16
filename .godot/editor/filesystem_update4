@@ -1,5 +1,3 @@
-res://prefabs/autoloads/noise_tools.tscn
-res://scripts/world/world_tiles.gd
 res://scenes/world.tscn
 res://prefabs/world/world_tiles.tscn
 res://prefabs/autoloads/globals.tscn
@@ -7,5 +5,6 @@ res://prefabs/characters/player.tscn
 res://prefabs/autoloads/sandmath.tscn
 res://prefabs/autoloads/save_values.tscn
 res://prefabs/autoloads/world_map_tools.tscn
-res://scripts/characters/player.gd
-res://scripts/autoloads/world_map_tools.gd
+res://prefabs/autoloads/noise_tools.tscn
+res://scripts/world/world_tiles.gd
+res://scripts/autoloads/noise_tools.gd
