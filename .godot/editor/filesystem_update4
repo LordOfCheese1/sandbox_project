@@ -6,5 +6,5 @@ res://prefabs/autoloads/sandmath.tscn
 res://prefabs/autoloads/save_values.tscn
 res://prefabs/autoloads/world_map_tools.tscn
 res://prefabs/autoloads/noise_tools.tscn
-res://scripts/world/world_tiles.gd
-res://scripts/autoloads/noise_tools.gd
+res://prefabs/autoloads/accessibility.tscn
+res://scripts/autoloads/world_map_tools.gd

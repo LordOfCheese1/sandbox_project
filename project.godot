@@ -22,13 +22,14 @@ SandMath="*res://prefabs/autoloads/sandmath.tscn"
 SaveValues="*res://prefabs/autoloads/save_values.tscn"
 WorldMapTools="*res://prefabs/autoloads/world_map_tools.tscn"
 NoiseTools="*res://prefabs/autoloads/noise_tools.tscn"
+Accessibility="*res://prefabs/autoloads/accessibility.tscn"
 
 [display]
 
 window/size/viewport_width=576
 window/size/viewport_height=384
-window/size/window_width_override=1536
-window/size/window_height_override=1024
+window/size/window_width_override=1152
+window/size/window_height_override=768
 window/stretch/mode="canvas_items"
 
 [input]

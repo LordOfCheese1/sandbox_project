@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4qwp2wwbwkdb"]
+
+[ext_resource type="Script" path="res://scripts/autoloads/accessibility.gd" id="1_2q877"]
+
+[node name="accessibility" type="Node2D"]
+script = ExtResource("1_2q877")

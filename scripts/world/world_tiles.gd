@@ -82,18 +82,17 @@ func do_checks(pos : Vector2): # tile coords
 	var tile_to_place = -1
 	
 	# min height, max height, bias towards, bias intensity, surface tile, underground tile
-	var config = [-20, 20, 0, 4, 2, 5]
 	
-	if pos.y > curve_surface_check(pos, config[0], config[1], config[2], config[3]):
-		if abs(pos.y - curve_surface_check(pos, config[0], config[1], config[2], config[3])) < 1.5:
-			tile_to_place = config[4]
+	if pos.y > curve_surface_check(pos):
+		if abs(pos.y - curve_surface_check(pos)) < 1.5:
+			tile_to_place = 2
 		else:
-			tile_to_place = config[5]
+			tile_to_place = 5
 	
 	set_cell(0, pos, 0, Vector2(tile_to_place, 0), 0)
 
 
-func curve_surface_check(pos : Vector2, min_height = -20, max_height = 20, bias = 0, bias_intensity = 5):
+func curve_surface_check(pos : Vector2):
 	# basically just subtracting the leftover from x so it's snapped to the point to its left
 	var start_x = pos.x - fmod(pos.x, WorldMapTools.CURVE_POINT_DISTANCE)
 	
@@ -106,7 +105,7 @@ func curve_surface_check(pos : Vector2, min_height = -20, max_height = 20, bias 
 		transition_value = 1 - transition_value
 	
 	# get the cosine-interpolated y value based on start-height, end-height and the transition value
-	return cerp(generate_y_height_for_x(start_x, min_height, max_height, bias, bias_intensity), generate_y_height_for_x(end_x, min_height, max_height, bias, bias_intensity), transition_value)
+	return cerp(generate_y_height_for_x(start_x), generate_y_height_for_x(end_x), transition_value)
 
 
 func generate_y_height_for_x(x : float, min = -20, max = 20, bias = 0, bias_intensity = 5):
