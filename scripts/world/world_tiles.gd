@@ -10,7 +10,7 @@ func _ready():
 	pass
 
 
-func _process(delta):
+func _process(_delta):
 	get_chunks_around_player()
 	
 	# find chunks that are too far away, add to deletion queue
@@ -41,9 +41,9 @@ func _process(delta):
 func get_chunks_around_player():
 	for x in WorldMapTools.MAX_ACTIVE_CHUNKS:
 		for y in WorldMapTools.MAX_ACTIVE_CHUNKS:
-			var snapped_player_x = snapped(Globals.player_pos.x - WorldMapTools.CHUNK_SIZE * WorldMapTools.TILE_SIZE / 2.0, WorldMapTools.CHUNK_SIZE * WorldMapTools.TILE_SIZE)
-			var snapped_player_y = snapped(Globals.player_pos.y - WorldMapTools.CHUNK_SIZE * WorldMapTools.TILE_SIZE / 2.0, WorldMapTools.CHUNK_SIZE * WorldMapTools.TILE_SIZE)
-			var chunk = Vector2(snapped_player_x, snapped_player_y) + Vector2(x - WorldMapTools.MAX_ACTIVE_CHUNKS / 2, y - WorldMapTools.MAX_ACTIVE_CHUNKS / 2) * WorldMapTools.TILE_SIZE * WorldMapTools.CHUNK_SIZE
+			var snapped_player_x = snapped(Globals.player_pos.x - WorldMapTools.CHUNK_SIZE * WorldMapTools.TILE_SIZE * 0.5, WorldMapTools.CHUNK_SIZE * WorldMapTools.TILE_SIZE)
+			var snapped_player_y = snapped(Globals.player_pos.y - WorldMapTools.CHUNK_SIZE * WorldMapTools.TILE_SIZE * 0.5, WorldMapTools.CHUNK_SIZE * WorldMapTools.TILE_SIZE)
+			var chunk = Vector2(snapped_player_x, snapped_player_y) + Vector2(x - WorldMapTools.MAX_ACTIVE_CHUNKS * 0.5, y - WorldMapTools.MAX_ACTIVE_CHUNKS * 0.5) * WorldMapTools.TILE_SIZE * WorldMapTools.CHUNK_SIZE
 			if !creation_queue.has(chunk) && !active_chunks.has(chunk):
 				queue_chunk_creation(chunk)
 
@@ -108,10 +108,10 @@ func curve_surface_check(pos : Vector2):
 	return cerp(generate_y_height_for_x(start_x), generate_y_height_for_x(end_x), transition_value)
 
 
-func generate_y_height_for_x(x : float, min = -20, max = 20, bias = 0, bias_intensity = 5):
-	return SandMath.biased_randi_range(WorldMapTools.SURFACE_HEIGHT + min, WorldMapTools.SURFACE_HEIGHT - min, bias, bias_intensity, x + Globals.world_seed)
+func generate_y_height_for_x(x : float, min_height = -20, max_height = 20, bias = 0, bias_intensity = 5):
+	return SandMath.biased_randi_range(WorldMapTools.SURFACE_HEIGHT + min_height, WorldMapTools.SURFACE_HEIGHT + max_height, bias, bias_intensity, x + Globals.world_seed)
 
 
 func cerp(a, b, transition_value : float): # transition value ranges from 0 to 1
-	var interp_value = (1 - cos(transition_value * PI)) / 2
+	var interp_value = (1 - cos(transition_value * PI)) * 0.5
 	return lerp(a, b, interp_value)
