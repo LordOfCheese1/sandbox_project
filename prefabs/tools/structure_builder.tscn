@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://q5yu6r7pgiep"]
+
+[ext_resource type="Script" path="res://scripts/tools/structure_builder.gd" id="1_3prop"]
+[ext_resource type="Texture2D" uid="uid://7lujw5l2eo5t" path="res://textures/world_tiles.png" id="2_1mbto"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0ywmd"]
+texture = ExtResource("2_1mbto")
+texture_region_size = Vector2i(8, 8)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_ovddr"]
+tile_size = Vector2i(8, 8)
+sources/0 = SubResource("TileSetAtlasSource_0ywmd")
+
+[node name="structure_builder" type="Node2D"]
+script = ExtResource("1_3prop")
+structure_name = "hell_house"
+
+[node name="comment" type="Label" parent="."]
+offset_top = 384.0
+offset_right = 642.0
+offset_bottom = 433.0
+text = "Build your things here, then run this scene to save to 'res://structure_tile_data.json'"
+
+[node name="tiles" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_ovddr")
+rendering_quadrant_size = 8
+format = 2
+layer_0/tile_data = PackedInt32Array(0, 458752, 0, 1, 458752, 0, 65535, 458752, 0, 2, 458752, 0, 65534, 458752, 0, -196606, 458752, 0, -131074, 458752, 0, -196611, 0, 0, -196610, 0, 0, -196609, 458752, 0, -262144, 458752, 0, -262143, 458752, 0, -262142, 0, 0, -262141, 0, 0, -262146, 0, 0, -327681, 0, 0, -458752, 0, 0, -327678, 0, 0, -393215, 0, 0, -262145, 0, 0, -327680, 0, 0, -393216, 0, 0, -327679, 0, 0)

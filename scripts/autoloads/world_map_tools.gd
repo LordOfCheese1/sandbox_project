@@ -54,3 +54,7 @@ func str_to_vector(input : String):
 		else:
 			y_reached = true
 	return Vector2i(int(x), int(y))
+
+
+func vector_to_str(input : Vector2):
+	return str(input.x) + "," + str(input.y)
