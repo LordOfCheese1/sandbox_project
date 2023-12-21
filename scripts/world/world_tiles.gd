@@ -6,10 +6,6 @@ var active_chunks = [] # this uses the chunk origin, so top left
 var deletion_queue = []
 
 
-func _ready():
-	pass
-
-
 func _process(_delta):
 	get_chunks_around_player()
 	
@@ -106,6 +102,10 @@ func curve_surface_check(pos : Vector2):
 	
 	# get the cosine-interpolated y value based on start-height, end-height and the transition value
 	return cerp(generate_y_height_for_x(start_x), generate_y_height_for_x(end_x), transition_value)
+
+
+func hell_house_check(pos : Vector2):
+	pass
 
 
 func generate_y_height_for_x(x : float, min_height = -20, max_height = 20, bias = 0, bias_intensity = 5):

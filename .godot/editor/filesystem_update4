@@ -8,7 +8,5 @@ res://prefabs/autoloads/world_map_tools.tscn
 res://prefabs/autoloads/noise_tools.tscn
 res://prefabs/autoloads/accessibility.tscn
 res://prefabs/tools/structure_builder.tscn
-res://scripts/autoloads/globals.gd
-res://scripts/tools/structure_builder.gd
-res://scripts/autoloads/world_map_tools.gd
 res://structure_tile_data.json
+res://scripts/tools/structure_builder.gd
