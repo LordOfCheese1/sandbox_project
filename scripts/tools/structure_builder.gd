@@ -6,12 +6,11 @@ extends Node2D
 func _ready():
 	var structure_data = {}
 	for tile in $tiles.get_used_cells(0):
-		structure_data[tile] = $tiles.get_cell_atlas_coords(0, tile)
+		structure_data[tile] = $tiles.get_cell_atlas_coords(0, tile).x
 	
 	var file = FileAccess.open("res://structure_tile_data.json", FileAccess.READ_WRITE)
 	var data_dictionary = JSON.parse_string(file.get_as_text())
 	
-	print(structure_data)
 	
 	# loop through tiles
 	for i in structure_data.keys():
