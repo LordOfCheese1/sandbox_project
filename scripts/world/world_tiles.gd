@@ -59,10 +59,13 @@ func generate_chunk(pos : Vector2): # global coords
 			var tile_pos = (pos / WorldMapTools.TILE_SIZE) + Vector2(x, y)
 			# do the checks and place tiles accordingly
 			do_checks(tile_pos)
+	
+	structure_checks(pos)
+	
 	apply_edits_in_chunk(pos)
 
 
-func apply_edits_in_chunk(chunk_pos : Vector2):
+func apply_edits_in_chunk(chunk_pos : Vector2): # global coords
 	if WorldMapTools.edited_chunks.has(chunk_pos):
 		for tile_pos in WorldMapTools.edited_chunks[chunk_pos]:
 			set_cell(0, tile_pos, 0, Vector2(WorldMapTools.edited_chunks[chunk_pos][tile_pos][0], 0), 0)
@@ -72,6 +75,35 @@ func delete_chunk(pos : Vector2): # global coords
 	for x in WorldMapTools.CHUNK_SIZE:
 		for y in WorldMapTools.CHUNK_SIZE:
 			set_cell(0, pos / WorldMapTools.TILE_SIZE + Vector2(x, y), 0, Vector2(-1, -1), 0)
+
+
+func structure_checks(pos : Vector2): # chunk coords(global)
+	var structure_file = FileAccess.open("res://structure_tile_data.json", FileAccess.READ)
+	var structure_data = JSON.parse_string(structure_file.get_as_text())
+	 
+	for struct_name in structure_data.keys():
+		for used_chunk in structure_data[struct_name]:
+			if struct_place_conditions(struct_name, pos) == true:
+				place_struct_chunk(pos, structure_data[struct_name][used_chunk], used_chunk)
+
+
+func struct_place_conditions(struct_name : String, pos : Vector2):
+	var x_check = false
+	var y_check = false
+	
+	match struct_name:
+		"big_sand_tower":
+			x_check = fmod(pos.x, 128) == 0
+			var surface = curve_surface_check(pos / WorldMapTools.TILE_SIZE)
+			y_check = pos.y / WorldMapTools.TILE_SIZE < surface && abs(pos.y / WorldMapTools.TILE_SIZE - surface) < 2
+	
+	return x_check == true && y_check == true
+
+
+func place_struct_chunk(origin_pos : Vector2, tile_data : Dictionary, used_chunk : String):
+	for str_tile_pos in tile_data.keys():
+		var tile_pos = WorldMapTools.str_to_vector(str_tile_pos)
+		set_cell(0, Vector2i(origin_pos / WorldMapTools.TILE_SIZE) + WorldMapTools.str_to_vector(used_chunk) / WorldMapTools.TILE_SIZE + tile_pos, 0, Vector2(tile_data[str_tile_pos], 0))
 
 
 func do_checks(pos : Vector2): # tile coords
@@ -102,10 +134,6 @@ func curve_surface_check(pos : Vector2):
 	
 	# get the cosine-interpolated y value based on start-height, end-height and the transition value
 	return cerp(generate_y_height_for_x(start_x), generate_y_height_for_x(end_x), transition_value)
-
-
-func hell_house_check(pos : Vector2):
-	pass
 
 
 func generate_y_height_for_x(x : float, min_height = -20, max_height = 20, bias = 0, bias_intensity = 5):

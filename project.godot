@@ -32,6 +32,10 @@ window/size/window_width_override=1152
 window/size/window_height_override=768
 window/stretch/mode="canvas_items"
 
+[filesystem]
+
+import/blender/enabled=false
+
 [input]
 
 left={

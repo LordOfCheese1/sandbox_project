@@ -26,17 +26,13 @@ func edit_tile(pos : Vector2, new_tile = -1):
 	recently_updated.append([tile_pos, new_tile])
 
 
-func get_used_chunks_by_structure(structure_pos : Vector2i, structure_data = {}):
-	var used_chunks = []
-
-
 func get_structure_data(structure_name : String):
 	var file = FileAccess.open("res://structure_tile_data.json", FileAccess.READ)
 	var raw_data = JSON.parse_string(file.get_as_text())
 	
 	var tile_data = {}
 	for key in raw_data[structure_name].keys():
-		tile_data[str_to_vector(key)] = raw_data[structure_name][key]
+		tile_data = raw_data[structure_name]
 	
 	return tile_data
 
