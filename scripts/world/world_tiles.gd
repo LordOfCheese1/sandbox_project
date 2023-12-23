@@ -82,22 +82,21 @@ func structure_checks(pos : Vector2): # chunk coords(global)
 	var structure_data = JSON.parse_string(structure_file.get_as_text())
 	 
 	for struct_name in structure_data.keys():
-		for used_chunk in structure_data[struct_name]:
-			if struct_place_conditions(struct_name, pos) == true:
+		for used_chunk in structure_data[struct_name].keys():
+			if does_chunk_overlap_with_struct_chunk(pos, WorldMapTools.str_to_vector(used_chunk), struct_name):
 				place_struct_chunk(pos, structure_data[struct_name][used_chunk], used_chunk)
 
 
-func struct_place_conditions(struct_name : String, pos : Vector2):
-	var x_check = false
-	var y_check = false
-	
+func does_chunk_overlap_with_struct_chunk(chunk_pos : Vector2, used_struct_chunk : Vector2, struct_name : String):
+	var struct_origin = Vector2()
 	match struct_name:
-		"big_sand_tower":
-			x_check = fmod(pos.x, 128) == 0
-			var surface = curve_surface_check(pos / WorldMapTools.TILE_SIZE)
-			y_check = pos.y / WorldMapTools.TILE_SIZE < surface && abs(pos.y / WorldMapTools.TILE_SIZE - surface) < 2
+		"forest_trees_0":
+			struct_origin = Vector2(fmod(chunk_pos.x, 640), 0)
 	
-	return x_check == true && y_check == true
+	if chunk_pos == struct_origin + used_struct_chunk:
+		return true
+	else:
+		return false
 
 
 func place_struct_chunk(origin_pos : Vector2, tile_data : Dictionary, used_chunk : String):
